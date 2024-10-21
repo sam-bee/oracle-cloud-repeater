@@ -1,2 +1,5 @@
 config
+repeat-command/repeat-command
+other-files/*
+!other-files/.gitkeep
 
