@@ -1,6 +1,9 @@
 # Start with an Ubuntu 22.04 base image
 FROM ubuntu:22.04
 
+
+### INSTALL OCI TOOL ###
+
 # Set environment variables to prevent interactive prompts during package installations
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -27,6 +30,36 @@ COPY config /root/.oci/config
 
 # Test the OCI CLI installation
 RUN  /root/bin/oci --version
+
+
+
+### INSTALL UTILITY FOR RETRYING COMMANDS ###
+
+# Install Go
+RUN wget https://go.dev/dl/go1.21.1.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
+    tar -C /usr/local -xzf /tmp/go.tar.gz && \
+    rm /tmp/go.tar.gz
+
+# Set Go environment variables
+ENV PATH="/usr/local/go/bin:$PATH"
+ENV GOPATH="/go"
+ENV PATH="$GOPATH/bin:$PATH"
+
+# Create a directory for the Go project
+RUN mkdir -p /app/repeat-command
+
+# Copy the Go source code from the local directory to the container
+COPY ./repeat-command /app/repeat-command
+
+# Set the working directory to the Go project
+WORKDIR /app/repeat-command
+
+# Build the Go project (assumes your Go code has a main.go file)
+RUN go build -o /app/repeat-command/main /app/repeat-command/main.go
+
+
+
+### GIVE USER A SHELL ###
 
 # Set the default command to run when the container starts
 CMD ["/bin/bash"]
