@@ -2,6 +2,7 @@
 FROM ubuntu:22.04
 
 
+
 ### INSTALL OCI TOOL ###
 
 # Set environment variables to prevent interactive prompts during package installations
@@ -58,11 +59,14 @@ COPY ./repeat-command /app/repeat-command
 RUN go build -o /app/repeat-command/main /app/repeat-command/main.go
 
 
+
 ### IMPORT USER'S OTHER FILES, E.G. TERRAFORM FILES ETC. ###
 
 # Whatever the user wants to put in ./other-files/ should end up on the container in /app/other-files/
 RUN mkdir -p /app/other-files/
 COPY ./other-files /app/other-files
+
+
 
 ### GIVE USER A SHELL ###
 
