@@ -2,6 +2,15 @@
 FROM ubuntu:22.04
 
 
+### IMPORT THE USER'S FILES ###
+
+# Give user the whole folder with their stuff in it on the container
+COPY ./resources /app/resources
+# The config file is for the Oracle Cloud Interface (OCI) CLI
+RUN mkdir -p /root/.oci
+RUN ln -s /app/resources/config /root/.oci/config
+
+
 
 ### INSTALL OCI TOOL ###
 
@@ -25,10 +34,6 @@ RUN bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/s
 # Set OCI CLI installation directory to PATH
 ENV PATH="$HOME/bin:$PATH"
 
-# Create .oci directory and copy the config file (from the build context)
-RUN mkdir -p /root/.oci
-COPY config /root/.oci/config
-
 # Test the OCI CLI installation
 RUN  /root/bin/oci --version
 
@@ -37,9 +42,7 @@ RUN  /root/bin/oci --version
 ### INSTALL UTILITY FOR RETRYING COMMANDS ###
 
 # Install Go
-RUN apt-get update && apt-get install -y \
-    wget
-
+RUN apt-get update && apt-get install -y wget
 RUN wget https://go.dev/dl/go1.21.1.linux-amd64.tar.gz -O /tmp/go.tar.gz -q && \
     tar -C /usr/local -xzf /tmp/go.tar.gz && \
     rm /tmp/go.tar.gz
@@ -62,7 +65,7 @@ RUN go build -o /app/repeat-command/main /app/repeat-command/main.go
 
 ### INSTALL TERRAFORM ###
 
-RUN wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip && \
+RUN wget -q https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip && \
     apt install -y zip && \
     unzip terraform_1.5.7_linux_amd64.zip && \
     mv terraform /usr/local/bin/ && \
@@ -70,15 +73,6 @@ RUN wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_am
 
 
 
-### IMPORT USER'S OTHER FILES, E.G. TERRAFORM FILES ETC. ###
+### SHELL ###
 
-# Whatever the user wants to put in ./other-files/ should end up on the container in /app/other-files/
-RUN mkdir -p /app/other-files/
-COPY ./other-files /app/other-files
-
-
-
-### GIVE USER A SHELL ###
-
-# Set the default command to run when the container starts
 CMD ["/bin/bash"]
