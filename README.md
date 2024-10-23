@@ -46,6 +46,7 @@ time of writing.
 
 ```
 make setup
+make shell
 ```
 
 You should now have a shell on the container. Try running:
@@ -54,8 +55,42 @@ You should now have a shell on the container. Try running:
 oci --version
 ```
 
-This will verify that the tool is working. It is [documented on the Oracle
+This will verify that the CLI tool is working. It is [documented on the Oracle
 website](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cliconcepts.htm).
+
+
+### Terraform
+
+Prepare by going to `/app/resources/` and running `terraform init` and `terraform plan`.
+
+Run `terraform apply` once. If you get lucky and it works, you're done.
+
+You may well see `Error: 500-InternalError, Out of host capacity.` however.
+
+
+### Utility to keep trying Terraform
+
+This is in `/app/repeat-command/repeat-command`. Run it from `/app/resources` with:
+
+```sh
+cd /app/resources/
+/app/repeat-command/repeat-command --wait=300 --timeout=14400 --command="terraform apply"
+```
+
+It should check every 5 minutes for 4 hours, repeatedly checking to see if there are resources available.
+
+If you prefer using the OCI CLI to provision your server, the command would be:
+
+```sh
+```
+oci compute instance launch --availability-domain "ad-example" \
+    --compartment-id ocid1.compartment.oc1..exampleuniqueID \
+    --shape "VM.Standard.A1.Flex" \
+    --image-id ocid1.image.oc1..exampleuniqueID \
+    --ssh-authorized-keys-file /app/other-files/id_rsa.pub
+```
+
+Good luck, and have fun with the free server.
 
 ### Clean-up
 
