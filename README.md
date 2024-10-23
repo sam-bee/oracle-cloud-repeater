@@ -98,3 +98,16 @@ For example, this command retries every 5 minutes. After 4 hours it dies.
 ```
 
 You can also kill it with `Ctrl + c`.
+
+Here is an example of a command you might want to run:
+
+```
+oci compute instance launch --availability-domain "ad-example" \
+    --compartment-id ocid1.compartment.oc1..exampleuniqueID \
+    --shape "VM.Standard.A1.Flex" \
+    --image-id ocid1.image.oc1..exampleuniqueID \
+    --ssh-authorized-keys-file /app/other-files/id_rsa.pub
+```
+
+Note that this assumes you have already got an SSH key in your `./other-files/` directory. If not, you will need to put
+the necessary credentials there and build the container again.
