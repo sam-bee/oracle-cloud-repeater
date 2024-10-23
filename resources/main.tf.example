@@ -16,7 +16,7 @@ provider "oci" {
   region           = "uk-london-1"
 }
 
-# Fill in https://cloud.oracle.com/compute/instances/create , choose 'Save as stack', and download resulting Terraform file. Open to find this whole secion.
+# Fill in https://cloud.oracle.com/compute/instances/create , choose 'Save as stack', and download resulting Terraform file. Open to find this whole section.
 resource "oci_core_instance" "generated_oci_core_instance" {
 	#
 }
