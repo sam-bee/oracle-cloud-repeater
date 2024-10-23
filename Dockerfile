@@ -60,6 +60,16 @@ RUN go build -o /app/repeat-command/main /app/repeat-command/main.go
 
 
 
+### INSTALL TERRAFORM ###
+
+RUN wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip && \
+    apt install -y zip && \
+    unzip terraform_1.5.7_linux_amd64.zip && \
+    mv terraform /usr/local/bin/ && \
+    terraform --version
+
+
+
 ### IMPORT USER'S OTHER FILES, E.G. TERRAFORM FILES ETC. ###
 
 # Whatever the user wants to put in ./other-files/ should end up on the container in /app/other-files/
