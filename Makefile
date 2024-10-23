@@ -1,4 +1,4 @@
-.PHONY: all build run copy-files clean
+.PHONY: all build run copy-files shell clean
 
 # Docker image name
 IMAGE_NAME = oci-repeater
@@ -25,6 +25,9 @@ build:
 
 run:
 	docker run --name $(CONTAINER_NAME) -d $(IMAGE_NAME)
+
+shell:
+	docker exec -it $(CONTAINER_NAME) /bin/bash
 
 clean:
 	docker rm -f $(CONTAINER_NAME) || true
