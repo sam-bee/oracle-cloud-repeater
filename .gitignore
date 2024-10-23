@@ -1,5 +1,5 @@
 config
-repeat-command/repeat-command
-other-files/*
-!other-files/.gitkeep
-
+resources/*
+!resources/main.tf.example
+!resources/config.example
+!resources/oci-keyfile.pem.local

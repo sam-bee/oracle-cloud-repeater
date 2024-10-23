@@ -1,0 +1,22 @@
+provider "oci" {
+
+  # Copy this OCID from https://cloud.oracle.com/tenancy
+  tenancy_ocid     = "ocid1.tenancy..." # @TODO change this
+
+  # Copy this OCID from https://cloud.oracle.com/identity/domains/my-profile
+  user_ocid        = "ocid1.user..." # @TODO change this
+
+  # Generate a new API key at https://cloud.oracle.com/identity/domains/my-profile/api-keys and put the file here with this filename
+  private_key_path = "/app/resources/oci-keyfile.pem" # @todo generate this from openssl rsa -pubout -outform DER -in /path/to/oci_api_key.pem | openssl md5 -c
+
+  # Generate this with `openssl rsa -pubout -outform DER -in /path/to/oci_keyfile.pem | openssl md5 -c`
+  fingerprint      = "aa:bb:cc:..." # @TODO change this
+
+  # Go to https://cloud.oracle.com/tenancy , be redirected, and look at query string in URL for your region
+  region           = "uk-london-1"
+}
+
+# Fill in https://cloud.oracle.com/compute/instances/create , choose 'Save as stack', and download resulting Terraform file. Open to find this whole secion.
+resource "oci_core_instance" "generated_oci_core_instance" {
+	#
+}
