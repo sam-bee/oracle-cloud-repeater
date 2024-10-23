@@ -1,28 +1,39 @@
-# Oracle Cloud Infrastructure CLI Container
+# Oracle Cloud Infrastructure CLI Repeater
 
-This Docker container has the Oracle Cloud Infrastructure CLI application installed on it.
+The **Oracle Cloud Infrastructure (OCI)** free tier is rather generous at time of writing, if a little oversubscribed. A
+4-core, 24GB VPS using ARM processors is available for free, using what OCI call their 'VM.Standard.A1.Flex' shape.
 
-The container was created because some combination of the OCI CLI app, Ubuntu 24.04/24.10, and Python wasn't working.
+However, messages saying they are 'out of capacity' are common. Some Reddit users have been writing Javascript into
+their Chrome console to keep pushing the button every 30 seconds for four hours until a VPS is provisioned.
 
-You will need your own OCI credentials to start provisioning things with this container.
+This project takes a similar 'keep nagging' approach, using a different tech stack:
+- Docker
+- Ubuntu 22.04 (attempts to use Ubuntu 24.xx with OCI CLI were thwarted by the Python ecosystem)
+- Terraform (for supplying the provisioning command)
+- Go (for running the provisioning command again and again until it gets what it wants)
+- OCI CLI (not used for the initial provisioning, but you may use this later)
 
-The [bonus feature](#bonus-feature-repeating-a-command), documented below, allows you to retry OCI commands until they
-succeed. If you are getting an error on OCI saying they are 'Out of capacity' for a shape such as 'VM.Standard.A1.Flex',
-for example, this will allow you to resend the command every 5 minutes until it succeeds.
+You can use this project to provision your free virtual private server. You can also keep the container, which comes with **Terraform** and **OCI CLI**, in case you want to use those for other purposes.
+
+You will need an Oracle Cloud Infrastructure account set up already. It's worth trying to provision your server through
+the web interface a couple of times first.
 
 ## Security
 
 It is always advisable to read the Dockerfile and other content before adding your credentials to them. Note that the
 base image is `ubuntu:22.04`, which is considered trustworthy. You can also see from the Dockerfile that the container
 doesn't send your credentials anywhere it shouldn't. On Linux hosts, you may want to run `shred -uvz config` to destroy
-this local copy of your access credentials to your Oracle Cloud Infrastructure, if you're sure you've used the container
-for the last time.
+this local copy of your API keys, if you're sure you've used the container for the last time.
 
 ## Prerequisits
 
-- docker
-- an Oracle Cloud Infrastructure account
-- you must copy `./config.example` to `./config` and insert your own details
+
+### To provision the free server
+- Docker
+- An Oracle Cloud Infrastructure account
+- if you you must copy `./config.example` to `./config` and insert your own details
+### To use OCI CLI
+- You will need to copy config.example
 
 ## Use
 
