@@ -13,52 +13,39 @@ This project takes a similar 'keep nagging' approach, using a different tech sta
 - Go (for running the provisioning command again and again until it gets what it wants)
 - OCI CLI (not used for the initial provisioning, but you may use this later)
 
-You can use this project to provision your free virtual private server. You can also keep the container, which comes with **Terraform** and **OCI CLI**, in case you want to use those for other purposes.
+You can use this project to provision your free virtual private server. You can also keep the container, which comes
+with **Terraform** and **OCI CLI**, in case you want to use those for other provisioning-related purposes.
 
 You will need an Oracle Cloud Infrastructure account set up already. It's worth trying to provision your server through
-the web interface a couple of times first.
-
-## Security
-
-It is always advisable to read the Dockerfile and other content before adding your credentials to them. Note that the
-base image is `ubuntu:22.04`, which is considered trustworthy. You can also see from the Dockerfile that the container
-doesn't send your credentials anywhere it shouldn't. On Linux hosts, you may want to run `shred -uvz config` to destroy
-this local copy of your API keys, if you're sure you've used the container for the last time.
+the web interface first.
 
 ## Prerequisits
-
 
 ### To provision the free server
 - Docker
 - An Oracle Cloud Infrastructure account
 - if you you must copy `./config.example` to `./config` and insert your own details
 ### To use OCI CLI
-- You will need to copy config.example
+- You will need to copy the config file inside the `resources/` directory: `cp config.example config`. Edit the `config`
+  file with the correct data, similarly to the top of your Terraform config, and start the project.
 
 ## Use
 
-### Your OCI Configuration
+### Generate necessary Terraform file
 
-You will need a copy of `./config.example`. The file must be called `./config`, and is [documented by
-Oracle](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliconfigure.htm).
+Create a copy of the Terraform example file: `./resources/main.tf.example ./resources/main.tf`. There are instructions
+within it telling you where in the OCI web interface you will need to get the various settings. The top section is
+mostly identity and authentication related. The bottom section describes your instance. You will need to go to
+https://cloud.oracle.com/compute/instances/create , configure your desired instance, then select `Save as stack` to
+generate the Terraform settings.
 
-```
-cp ./config.example config
-```
-
-Now edit `config` to your satisfaction.
-
-### Handling Other Files
-
-If you are using Terraform, OCI Resource Manager, or OCI CLI + json files, you will have config files that you want to
-put on the containter. Just copy them into `./other-files/` before starting your container, and the Dockerfile provided
-will make them available at `/root/other-files/`.
+A `VM.Standard.A1.Flex` shape with 4 CPU cores and 24GB of RAM is a popular choice - this is within the free tier at
+time of writing.
 
 ### Start Up Container
 
 ```
-docker build -t oci-cli-container .
-docker run -it oci-cli-container
+make setup
 ```
 
 You should now have a shell on the container. Try running:
