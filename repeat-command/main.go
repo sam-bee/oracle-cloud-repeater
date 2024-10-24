@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"os/exec"
+	"strings"
 	"time"
 )
 
@@ -24,8 +26,12 @@ func main() {
 
 	startTime := time.Now()
 	for {
+		// Run command
+		var stdout, stderr bytes.Buffer
 		cmd := exec.Command("sh", "-c", command)
 		err := cmd.Run()
+		cmd.Stdout = &stdout
+		cmd.Stderr = &stderr
 		if err == nil {
 			fmt.Println("Command executed successfully")
 			return
@@ -33,6 +39,16 @@ func main() {
 
 		if time.Since(startTime).Seconds() > float64(timeout) {
 			fmt.Println("Timeout reached. Command failed to execute successfully.")
+			return
+		}
+
+		// Check whether the stderr contained the string "500-InternalError, Out of host capacity."
+
+		if err != nil && strings.Contains(string(stderr.String()), "500-InternalError, Out of host capacity.") {
+			fmt.Printf("%s Command failed: 'Out of host capacity'.Retrying in %d seconds...\n", time.Now().String(), waitTime)
+		} else {
+			fmt.Println("Command failed due to other reasons. Exiting...")
+			fmt.Println(stderr.String())
 			return
 		}
 
