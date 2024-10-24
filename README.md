@@ -1,4 +1,6 @@
-# Oracle Cloud Infrastructure CLI Repeater
+# Oracle Cloud Infrastructure Repeater
+
+A workaround for the OCI `VM.Standard.A1.Flex` 'Out of capacity' error.
 
 The **Oracle Cloud Infrastructure (OCI)** free tier is rather generous at time of writing, if a little oversubscribed. A
 4-core, 24GB VPS using ARM processors is available for free, using what OCI call their 'VM.Standard.A1.Flex' shape.
@@ -25,6 +27,7 @@ the web interface first.
 - Docker
 - An Oracle Cloud Infrastructure account
 - if you you must copy `./config.example` to `./config` and insert your own details
+
 ### To use OCI CLI
 - You will need to copy the config file inside the `resources/` directory: `cp config.example config`. Edit the `config`
   file with the correct data, similarly to the top of your Terraform config, and start the project.
@@ -82,7 +85,6 @@ It should check every 5 minutes for 4 hours, repeatedly checking to see if there
 If you prefer using the OCI CLI to provision your server, the command would be:
 
 ```sh
-```
 oci compute instance launch --availability-domain "ad-example" \
     --compartment-id ocid1.compartment.oc1..exampleuniqueID \
     --shape "VM.Standard.A1.Flex" \
@@ -94,24 +96,14 @@ Good luck, and have fun with the free server.
 
 ### Clean-up
 
-To get rid of the container when it has served your purpose, follow these instructions. (Maybe consider whether you want
-to save a copy of your bash `history` first.)
-
 ```
-docker ps
+make cleanup
 ```
 
-Identify relevant container ID from output.
+To clean up the local copy of your secret access credentials securely, use:
 
 ```
-docker kill [container ID]
-docker rm [container ID]
-```
-
-To clean up the local copy of your secret access credentials securely, after you are done with the container:
-
-```
-shred -uvz config
+shred -uvz [filename]
 ```
 
 ## Bonus Feature: Repeating a Command
