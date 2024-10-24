@@ -29,9 +29,9 @@ func main() {
 		// Run command
 		var stdout, stderr bytes.Buffer
 		cmd := exec.Command("sh", "-c", command)
-		err := cmd.Run()
 		cmd.Stdout = &stdout
 		cmd.Stderr = &stderr
+		err := cmd.Run()
 		if err == nil {
 			fmt.Println("Command executed successfully")
 			return
@@ -44,15 +44,15 @@ func main() {
 
 		// Check whether the stderr contained the string "500-InternalError, Out of host capacity."
 
-		if err != nil && strings.Contains(string(stderr.String()), "500-InternalError, Out of host capacity.") {
-			fmt.Printf("%s Command failed: 'Out of host capacity'.Retrying in %d seconds...\n", time.Now().String(), waitTime)
+		if err != nil && strings.Contains(string(stderr.String()), "Out of host capacity.") {
+			fmt.Printf("%s Command failed: 'Out of host capacity'. Retrying in %d seconds...\n", time.Now().Format("Mon Jan 02 15:04:05 2006"), waitTime)
 		} else {
 			fmt.Println("Command failed due to other reasons. Exiting...")
+			fmt.Println(stdout.String())
 			fmt.Println(stderr.String())
 			return
 		}
 
-		fmt.Printf("Command failed. Got %s. Retrying in %d seconds...\n", err, waitTime)
 		time.Sleep(time.Duration(waitTime) * time.Second)
 	}
 }
