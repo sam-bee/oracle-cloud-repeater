@@ -5,15 +5,17 @@ A workaround for the OCI `VM.Standard.A1.Flex` 'Out of capacity' error.
 The **Oracle Cloud Infrastructure (OCI)** free tier is rather generous at time of writing, if a little oversubscribed. A
 4-core, 24GB VPS using ARM processors is available for free, using what OCI call their 'VM.Standard.A1.Flex' shape.
 
-However, messages saying they are 'out of capacity' are common. Some Reddit users have been writing Javascript into
-their Chrome console to keep pushing the button every 30 seconds for four hours until a VPS is provisioned.
+However, messages saying they are 'out of capacity' are common. Some [Reddit
+users](https://www.reddit.com/r/oraclecloud/comments/zf0tje/out_of_capacity_for_shape_vmstandarda1flex/) have been
+writing Javascript into their Chrome console to keep pushing the button every 30 seconds for four hours until a VPS is
+provisioned.
 
 This project takes a similar 'keep nagging' approach, using a different tech stack:
 - Docker
 - Ubuntu 22.04 (attempts to use Ubuntu 24.xx with OCI CLI were thwarted by the Python ecosystem)
 - Terraform (for supplying the provisioning command)
 - Go (for running the provisioning command again and again until it gets what it wants)
-- OCI CLI (not used for the initial provisioning, but you may use this later)
+- OCI CLI (alternative means of provisioning things if you wish)
 
 You can use this project to provision your free virtual private server. You can also keep the container, which comes
 with **Terraform** and **OCI CLI**, in case you want to use those for other provisioning-related purposes.
