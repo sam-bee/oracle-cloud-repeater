@@ -24,6 +24,8 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     python3-distutils \
     python3-venv \
+    vim \
+    tree \
     --no-install-recommends && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -59,7 +61,7 @@ RUN mkdir -p /app/repeat-command
 COPY ./repeat-command /app/repeat-command
 
 # Build the Go project (assumes your Go code has a main.go file)
-RUN go build -o /app/repeat-command/main /app/repeat-command/main.go
+RUN go build -o /app/repeat-command/repeat-command /app/repeat-command/main.go
 
 
 
