@@ -74,7 +74,7 @@ This is in `/app/repeat-command/repeat-command`. Run it from `/app/resources` wi
 
 ```sh
 cd /app/resources/
-/app/repeat-command/repeat-command --wait=300 --timeout=14400 --command="terraform apply"
+/app/repeat-command/repeat-command --wait=300 --timeout=14400 --command="terraform apply -auto-approve"
 ```
 
 It should check every 5 minutes for 4 hours, repeatedly checking to see if there are resources available.
