@@ -12,11 +12,17 @@ MAIN_TF = ./resources/main.tf
 CONFIG_EXAMPLE = ./resources/config.example
 CONFIG = ./resources/config
 
+ifeq ($(OS),Windows_NT)
+    COPY_CMD = powershell -Command "if (!(Test-Path $(1))) { Copy-Item $(2) $(1) }"
+else
+    COPY_CMD = if [ ! -f $(1) ]; then cp $(2) $(1); fi
+endif
+
 setup: copy-files build run
 
 copy-files:
-	if [ ! -f $(MAIN_TF) ]; then cp $(MAIN_TF_EXAMPLE) $(MAIN_TF); fi
-	if [ ! -f $(CONFIG) ]; then cp $(CONFIG_EXAMPLE) $(CONFIG); fi
+	$(call COPY_CMD,$(MAIN_TF),$(MAIN_TF_EXAMPLE))
+	$(call COPY_CMD,$(CONFIG),$(CONFIG_EXAMPLE))
 
 build:
 	docker build -t $(CONTAINER_NAME) .
